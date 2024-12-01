@@ -14,10 +14,11 @@ import {
 	Select,
 	MenuItem,
 	Modal,
+	Chip,
 } from "@mui/material"
 import { Edit, Delete, Share, Visibility, ArrowUpward, ArrowDownward } from "@mui/icons-material"
 import { db, auth } from "../../service/firebase"
-import { collection, getDocs, deleteDoc, doc, setDoc, getDoc } from "firebase/firestore"
+import { collection, getDocs, deleteDoc, doc, setDoc, getDoc, query, where } from "firebase/firestore"
 import Pagination from "../navigation/Pagination"
 import InsertJob from "./InsertJob"
 import { showSuccessAlert, showErrorAlert, showWarningAlert, showConfirmationAlert } from "../../helper/alert"
@@ -61,8 +62,40 @@ const Dashboard = () => {
 					jobsData = jobsData.filter((job) => job.creatorId === user.uid)
 				}
 
-				setJobs(jobsData)
-				setFilteredJobs(jobsData)
+				const usersCollection = collection(db, "users")
+				const userDocs = await getDocs(usersCollection)
+				const recruiters = userDocs.docs
+					.map((doc) => ({ id: doc.id, ...doc.data() }))
+					.filter((u) => u.role === "recruiter")
+
+				const jobsWithDetails = await Promise.all(
+					jobsData.map(async (job) => {
+						const recruiter = recruiters.find((r) => r.id === job.creatorId)
+
+						let applicantsCount = 0
+						if (userRole === "recruiter") {
+							const applicationsQuery = query(
+								collection(db, "applications"),
+								where("jobId", "==", job.id)
+							)
+							const applicationsSnapshot = await getDocs(applicationsQuery)
+							applicantsCount = applicationsSnapshot.size
+						}
+
+						return {
+							...job,
+							recruiterName: recruiter?.name || "Não informado",
+							recruiterCompany: recruiter?.company || "Não informado",
+							salaryRange: job.salaryMax
+								? `R$ ${job.salaryMin || 0} - R$ ${job.salaryMax}`
+								: "Não informado",
+							applicantsCount,
+						}
+					})
+				)
+
+				setJobs(jobsWithDetails)
+				setFilteredJobs(jobsWithDetails)
 			} catch (error) {
 				showErrorAlert("Erro", "Erro ao buscar vagas.")
 				console.error("Erro ao buscar vagas:", error)
@@ -119,8 +152,15 @@ const Dashboard = () => {
 		}
 	}
 
-	const sortedJobs = [...jobs].sort((a, b) => {
-		if (sortField === "daysLeft") {
+	const sortedJobs = [...filteredJobs].sort((a, b) => {
+		if (sortField === "status") {
+			const statusA = new Date(a.closeDate) > new Date() ? "Ativo" : "Fechado"
+			const statusB = new Date(b.closeDate) > new Date() ? "Ativo" : "Fechado"
+
+			return sortOrder === "asc"
+				? statusA.localeCompare(statusB)
+				: statusB.localeCompare(statusA)
+		} else if (sortField === "daysLeft") {
 			const daysLeftA = Math.ceil((new Date(a.closeDate) - new Date()) / (1000 * 60 * 60 * 24))
 			const daysLeftB = Math.ceil((new Date(b.closeDate) - new Date()) / (1000 * 60 * 60 * 24))
 			return sortOrder === "asc" ? daysLeftA - daysLeftB : daysLeftB - daysLeftA
@@ -191,28 +231,28 @@ const Dashboard = () => {
 	const handleCloseApplyModal = () => {
 		setSelectedJob(null)
 		setIsApplyModalOpen(false)
-	};
+	}
 
 	const handleApply = async () => {
-		if (!user) return;
+		if (!user) return
 
 		try {
-			const applicationsRef = collection(db, "applications");
+			const applicationsRef = collection(db, "applications")
 			await setDoc(doc(applicationsRef, `${selectedJob.id}_${user.uid}`), {
 				jobId: selectedJob.id,
 				userId: user.uid,
 				appliedAt: new Date(),
-			});
+			})
 
-			showSuccessAlert("Sucesso", "Você se inscreveu na vaga com sucesso!");
+			showSuccessAlert("Sucesso", "Você se inscreveu na vaga com sucesso!")
 
 			setSelectedJob((prev) => ({
 				...prev,
 				isApplied: true,
-			}));
+			}))
 		} catch (error) {
-			showErrorAlert("Erro", "Não foi possível se inscrever na vaga.");
-			console.error("Erro ao salvar inscrição:", error);
+			showErrorAlert("Erro", "Não foi possível se inscrever na vaga.")
+			console.error("Erro ao salvar inscrição:", error)
 		}
 
 		handleCloseShareModal()
@@ -292,14 +332,27 @@ const Dashboard = () => {
 									<TableCell onClick={() => handleSortChange("title")}>
 										Título {sortField === "title" && (sortOrder === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />)}
 									</TableCell>
-									<TableCell>Localização</TableCell>
-									<TableCell onClick={() => handleSortChange("status")}>
-										Status {sortField === "status" && (sortOrder === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />)}
-									</TableCell>
-									<TableCell>Nº Inscritos</TableCell>
-									<TableCell onClick={() => handleSortChange("daysLeft")}>
-										Dias para Fechamento {sortField === "daysLeft" && (sortOrder === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />)}
-									</TableCell>
+									{userRole === "candidate" && (
+										<>
+											<TableCell>Faixa Salarial</TableCell>
+											<TableCell>Localização</TableCell>
+											<TableCell>Data Limite</TableCell>
+											<TableCell>Nome do Recrutador</TableCell>
+											<TableCell>Empresa do Recrutador</TableCell>
+										</>
+									)}
+									{userRole === "recruiter" && (
+										<>
+											<TableCell>Localização</TableCell>
+											<TableCell onClick={() => handleSortChange("status")}>
+												Status {sortField === "status" && (sortOrder === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />)}
+											</TableCell>
+											<TableCell>Nº Inscritos</TableCell>
+											<TableCell onClick={() => handleSortChange("daysLeft")}>
+												Dias para Fechamento {sortField === "daysLeft" && (sortOrder === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />)}
+											</TableCell>
+										</>
+									)}
 									<TableCell>Ações</TableCell>
 								</TableRow>
 							</TableHead>
@@ -308,46 +361,60 @@ const Dashboard = () => {
 									<TableRow key={job.id}>
 										<TableCell>
 											{userRole === "candidate" ? (
-												<Typography
-													sx={{
-														cursor: "pointer",
-														color: "blue",
-														textDecoration: "underline",
-													}}
+												<Button
+													variant="text"
 													onClick={() => handleOpenModal(job)}
+													sx={{
+														color: "primary.main",
+														textTransform: "none",
+														fontWeight: "bold",
+														padding: 0,
+														minWidth: 0,
+														"&:hover": {
+															textDecoration: "underline",
+														},
+													}}
 												>
 													{job.title}
-												</Typography>
+												</Button>
 											) : (
-												job.title
+												<Typography variant="body2">
+													{job.title}
+												</Typography>
 											)}
 										</TableCell>
-										<TableCell>{job.location}</TableCell>
+										{userRole === "candidate" && (
+											<>
+												<TableCell>{job.salaryRange || "Não informado"}</TableCell>
+												<TableCell>{job.location || "Não informado"}</TableCell>
+												<TableCell>{new Date(job.closeDate).toLocaleDateString() || "Não informado"}</TableCell>
+												<TableCell>{job.recruiterName || "Não informado"}</TableCell>
+												<TableCell>{job.recruiterCompany || "Não informado"}</TableCell>
+											</>
+										)}
+										{userRole === "recruiter" && (
+											<>
+												<TableCell>{job.location || "Não informado"}</TableCell>
+												<TableCell>
+													{(() => {
+														const currentDate = new Date();
+														const closeDate = new Date(job.closeDate);
+														return closeDate > currentDate ? "Ativo" : "Fechado";
+													})()}
+												</TableCell>
+												<TableCell>{job.applicantsCount || 0}</TableCell>
+												<TableCell>
+													{(() => {
+														const currentDate = new Date();
+														const closeDate = new Date(job.closeDate);
+														const daysLeft = Math.ceil((closeDate - currentDate) / (1000 * 60 * 60 * 24));
+														return daysLeft > 0 ? `${daysLeft} dias` : "Expirado";
+													})()}
+												</TableCell>
+											</>
+										)}
 										<TableCell>
-											{(() => {
-												const currentDate = new Date()
-												const closeDate = new Date(job.closeDate)
-												const daysLeft = Math.ceil(
-													(closeDate - currentDate) /
-													(1000 * 60 * 60 * 24)
-												)
-												return daysLeft > 0 ? "Ativo" : "Fechado"
-											})()}
-										</TableCell>
-										<TableCell>{job.applicantsCount || 0}</TableCell>
-										<TableCell>
-											{(() => {
-												const currentDate = new Date()
-												const closeDate = new Date(job.closeDate)
-												const daysLeft = Math.ceil(
-													(closeDate - currentDate) /
-													(1000 * 60 * 60 * 24)
-												)
-												return daysLeft > 0 ? `${daysLeft} dias` : "Expirado"
-											})()}
-										</TableCell>
-										<TableCell>
-											{userRole === "recruiter" && (
+											{userRole === "recruiter" ? (
 												<>
 													<IconButton
 														color="primary"
@@ -369,13 +436,21 @@ const Dashboard = () => {
 													</IconButton>
 													<IconButton
 														color="info"
-														onClick={() =>
-															navigate(`/candidates/${job.id}`)
-														}
+														onClick={() => navigate(`/candidates/${job.id}`)}
 													>
 														<Visibility />
 													</IconButton>
 												</>
+											) : (
+												<Button
+													variant="contained"
+													color="success"
+													fullWidth
+													onClick={() => handleOpenModal(job)}
+													disabled={new Date(job.closeDate) < new Date()}
+												>
+													Inscrever-se
+												</Button>
 											)}
 										</TableCell>
 									</TableRow>
@@ -415,10 +490,54 @@ const Dashboard = () => {
 						{selectedJob?.title}
 					</Typography>
 					<Typography variant="subtitle1" sx={{ mb: 2 }}>
-						{selectedJob?.location}
+						Localização: {selectedJob?.location}
 					</Typography>
 					<Typography variant="body1" sx={{ mb: 3 }}>
 						{selectedJob?.description}
+					</Typography>
+
+					<Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+						Salário
+					</Typography>
+					<Typography variant="body1" sx={{ mb: 2 }}>
+						{selectedJob?.salaryMax ? `R$ ${selectedJob.salaryMax}` : "Não informado"}
+					</Typography>
+
+					<Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+						Habilidades Requeridas
+					</Typography>
+					{selectedJob?.skillsRequired?.length > 0 ? (
+						<Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
+							{selectedJob.skillsRequired.map((skill, index) => (
+								<Chip key={index} label={skill} color="primary" />
+							))}
+						</Box>
+					) : (
+						<Typography variant="body2" color="text.secondary">
+							Nenhuma habilidade especificada.
+						</Typography>
+					)}
+
+					<Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+						Habilidades Desejáveis
+					</Typography>
+					{selectedJob?.skillsDesired?.length > 0 ? (
+						<Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
+							{selectedJob.skillsDesired.map((skill, index) => (
+								<Chip key={index} label={skill} color="secondary" />
+							))}
+						</Box>
+					) : (
+						<Typography variant="body2" color="text.secondary">
+							Nenhuma habilidade desejável especificada.
+						</Typography>
+					)}
+
+					<Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+						Tempo de Experiência
+					</Typography>
+					<Typography variant="body1" sx={{ mb: 3 }}>
+						{selectedJob?.experienceRequired ? `${selectedJob.experienceRequired}` : "Não informado"}
 					</Typography>
 
 					{selectedJob?.isApplied ? (
@@ -441,7 +560,10 @@ const Dashboard = () => {
 							color="success"
 							fullWidth
 							onClick={handleApply}
-							disabled={selectedJob?.status === "Fechado"}
+							disabled={
+								selectedJob?.status === "Fechado" ||
+								new Date(selectedJob?.closeDate) < new Date()
+							}
 						>
 							Inscrever-se
 						</Button>

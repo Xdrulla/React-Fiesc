@@ -19,6 +19,7 @@ import { collection, query, where, getDocs, doc, getDoc } from "firebase/firesto
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useNavigate, useParams } from "react-router-dom"
 import { db, auth } from "../../service/firebase"
+import { calculateCandidateScore } from "../../helper/scoreMath"
 
 const CandidateList = () => {
 	const [candidates, setCandidates] = useState([])
@@ -33,6 +34,9 @@ const CandidateList = () => {
 			try {
 				if (!user) return
 
+				const jobDoc = await getDoc(doc(db, "jobs", jobId))
+				const jobData = jobDoc.exists() ? jobDoc.data() : null
+
 				const applicationsQuery = query(
 					collection(db, "applications"),
 					where("jobId", "==", jobId)
@@ -46,10 +50,14 @@ const CandidateList = () => {
 
 				const usersDataPromises = applicationsData.map(async (application) => {
 					const userDoc = await getDoc(doc(db, "users", application.userId))
+					const userData = userDoc.exists() ? userDoc.data() : {}
+					const score = calculateCandidateScore(userData, jobData)
+
 					return {
 						...application,
-						name: userDoc.exists() ? userDoc.data().name : "Usuário desconhecido",
-						email: userDoc.exists() ? userDoc.data().email : "E-mail não disponível",
+						name: userData.name || "Usuário desconhecido",
+						email: userData.email || "E-mail não disponível",
+						score: score || "N/A",
 					}
 				})
 
@@ -114,7 +122,7 @@ const CandidateList = () => {
 							<TableRow key={candidate.id}>
 								<TableCell>{candidate.name}</TableCell>
 								<TableCell>{candidate.email}</TableCell>
-								<TableCell>{candidate.score || "Não disponível"}</TableCell>
+								<TableCell>{candidate.score}</TableCell>
 								<TableCell>
 									<Button
 										variant="text"

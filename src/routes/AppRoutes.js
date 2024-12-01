@@ -12,6 +12,7 @@ import MyProfile from "../components/pages/MyProfile"
 import CandidateList from "../components/pages/CandidateList"
 import CandidateDetails from "../components/pages/CandidateDetails"
 import MyApplications from "../components/pages/MyApplications"
+import JobDetails from "../components/pages/JobDetails"
 
 const AppRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoutes = () => {
       <Route path="/register/candidate" element={<CandidateRegisterPage />} />
       <Route path="/candidates/:jobId" element={<CandidateList />} />
       <Route path="/candidate-details/:candidateId" element={<CandidateDetails />} />
+      <Route path="/job-details/:jobId" element={<JobDetails />} />
       <Route
         path="/add-info/recruiter"
         element={

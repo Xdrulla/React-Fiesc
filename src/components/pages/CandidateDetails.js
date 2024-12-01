@@ -1,21 +1,39 @@
 import React, { useEffect, useState } from "react"
-import { Box, Typography, Grid, Paper } from "@mui/material"
-import { useParams } from "react-router-dom"
+import { Box, Typography, Grid, Paper, Button } from "@mui/material"
+import { useParams, useNavigate } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../../service/firebase"
+import { calculateCandidateScore } from "../../helper/scoreMath" 
 
 const CandidateDetails = () => {
   const { candidateId } = useParams()
   const [candidate, setCandidate] = useState(null)
+  const [score, setScore] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchCandidateDetails = async () => {
       try {
-        const candidateDoc = await getDoc(doc(db, "candidates", candidateId))
-        if (candidateDoc.exists()) {
-          setCandidate(candidateDoc.data())
+        const applicationDoc = await getDoc(doc(db, "applications", candidateId))
+        if (applicationDoc.exists()) {
+          const { userId, jobId } = applicationDoc.data()
+
+          const userDoc = await getDoc(doc(db, "users", userId))
+          const jobDoc = await getDoc(doc(db, "jobs", jobId))
+
+          if (userDoc.exists() && jobDoc.exists()) {
+            const userData = userDoc.data()
+            const jobData = jobDoc.data()
+
+            const calculatedScore = calculateCandidateScore(userData, jobData)
+
+            setCandidate({ ...userData })
+            setScore(calculatedScore)
+          } else {
+            console.error("Usuário ou vaga não encontrados")
+          }
         } else {
-          console.error("Candidato não encontrado")
+          console.error("Inscrição não encontrada")
         }
       } catch (error) {
         console.error("Erro ao buscar detalhes do candidato:", error)
@@ -34,7 +52,7 @@ const CandidateDetails = () => {
       <Typography variant="h5" sx={{ mb: 3 }}>
         Detalhes do Candidato
       </Typography>
-      <Paper sx={{ p: 3 }}>
+      <Paper sx={{ p: 3, mb: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6">Nome Completo</Typography>
@@ -49,27 +67,22 @@ const CandidateDetails = () => {
             <Typography>{candidate.phone}</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h6">Experiência Profissional</Typography>
-            <Typography>{candidate.workExperience}</Typography>
-          </Grid>
-          <Grid item xs={12}>
             <Typography variant="h6">Habilidades</Typography>
             <Typography>{candidate.skills?.join(", ")}</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h6">Tempo de Experiência</Typography>
-            <Typography>{candidate.experienceLevel}</Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6">Faixa Salarial Esperada</Typography>
-            <Typography>R$ {candidate.salaryRange}</Typography>
-          </Grid>
-          <Grid item xs={12}>
             <Typography variant="h6">Score</Typography>
-            <Typography>{candidate.score}</Typography>
+            <Typography>{score || "Não disponível"}</Typography>
           </Grid>
         </Grid>
       </Paper>
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => navigate(`/candidates/${candidateId.split("_")[0]}`)}
+      >
+        Voltar
+      </Button>
     </Box>
   )
 }
