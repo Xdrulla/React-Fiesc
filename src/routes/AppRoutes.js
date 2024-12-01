@@ -8,6 +8,10 @@ import AddInformationRecruiter from "../components/pages/AddInformationRecruiter
 import AddInformationCandidate from "../components/pages/AddInformationCandidate"
 import ProtectedRoute from "./ProtectedRoute"
 import Dashboard from "../components/pages/Dashboard"
+import MyProfile from "../components/pages/MyProfile"
+import CandidateList from "../components/pages/CandidateList"
+import CandidateDetails from "../components/pages/CandidateDetails"
+import MyApplications from "../components/pages/MyApplications"
 
 const AppRoutes = () => {
   return (
@@ -16,6 +20,8 @@ const AppRoutes = () => {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/register/recruiter" element={<RecruiterRegisterPage />} />
       <Route path="/register/candidate" element={<CandidateRegisterPage />} />
+      <Route path="/candidates/:jobId" element={<CandidateList />} />
+      <Route path="/candidate-details/:candidateId" element={<CandidateDetails />} />
       <Route
         path="/add-info/recruiter"
         element={
@@ -37,6 +43,22 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <MyProfile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-applications"
+        element={
+          <ProtectedRoute>
+            <MyApplications />
           </ProtectedRoute>
         }
       />

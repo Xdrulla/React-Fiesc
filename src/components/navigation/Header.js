@@ -9,11 +9,12 @@ import { auth, db } from "../../service/firebase"
 const Header = () => {
   const [user] = useAuthState(auth)
   const [userName, setUserName] = useState("Usuário")
+  const [userRole, setUserRole] = useState(null)
   const [anchorEl, setAnchorEl] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchUserName = async () => {
+    const fetchUserData = async () => {
       if (user) {
         try {
           const userDocRef = doc(db, "users", user.uid)
@@ -21,8 +22,8 @@ const Header = () => {
 
           if (userDoc.exists()) {
             const userData = userDoc.data()
-						
             setUserName(userData.name || "Usuário")
+            setUserRole(userData.role || "candidate")
           } else {
             console.error("Usuário não encontrado na coleção users.")
           }
@@ -32,7 +33,7 @@ const Header = () => {
       }
     }
 
-    fetchUserName()
+    fetchUserData()
   }, [user])
 
   const handleMenuOpen = (event) => {
@@ -79,7 +80,16 @@ const Header = () => {
               onClose={handleMenuClose}
             >
               <MenuItem onClick={() => navigate("/profile")}>Meu Perfil</MenuItem>
-              <MenuItem onClick={() => navigate("/my-jobs")}>Minhas Vagas</MenuItem>
+              {userRole === "recruiter" ? (
+                <MenuItem onClick={() => navigate("/dashboard")}>Minhas Vagas</MenuItem>
+              ) : (
+                <MenuItem onClick={() => navigate("/my-applications")}>
+                  Minhas Inscrições
+                </MenuItem>
+              )}
+              {userRole === "candidate" && (
+                <MenuItem onClick={() => navigate("/dashboard")}>Vagas</MenuItem>
+              )}
               <MenuItem onClick={handleLogout}>Sair</MenuItem>
             </Menu>
           </div>
