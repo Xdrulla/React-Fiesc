@@ -260,7 +260,7 @@ const Dashboard = () => {
 	}
 
 	return (
-		<Box sx={{ p: 3 }}>
+		<Box sx={{ p: 3, pb: "80px" }}>
 			{isCreatingJob || editingJob ? (
 				<InsertJob
 					job={editingJob}

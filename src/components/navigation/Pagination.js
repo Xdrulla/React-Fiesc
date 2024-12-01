@@ -24,7 +24,21 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange, onIte
   }
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mt: 2 }}>
+    <Box
+      sx={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "white",
+        borderTop: "1px solid #ccc",
+        zIndex: 10,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "8px 16px",
+      }}
+    >
       <FormControl size="small" sx={{ minWidth: 120 }}>
         <InputLabel>Itens por Página</InputLabel>
         <Select

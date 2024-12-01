@@ -20,11 +20,14 @@ import { useAuthState } from "react-firebase-hooks/auth"
 import { useNavigate, useParams } from "react-router-dom"
 import { db, auth } from "../../service/firebase"
 import { calculateCandidateScore } from "../../helper/scoreMath"
+import Pagination from "../navigation/Pagination"
 
 const CandidateList = () => {
 	const [candidates, setCandidates] = useState([])
 	const [sortField, setSortField] = useState("name")
 	const [sortOrder, setSortOrder] = useState("asc")
+	const [currentPage, setCurrentPage] = useState(1)
+	const [itemsPerPage, setItemsPerPage] = useState(5)
 	const [user] = useAuthState(auth)
 	const navigate = useNavigate()
 	const { jobId } = useParams()
@@ -84,12 +87,25 @@ const CandidateList = () => {
 		return sortOrder === "asc" ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA)
 	})
 
+	const startIndex = (currentPage - 1) * itemsPerPage
+	const endIndex = startIndex + itemsPerPage
+	const paginatedCandidates = sortedCandidates.slice(startIndex, endIndex)
+
+	const handlePageChange = (page) => {
+		setCurrentPage(page)
+	}
+
+	const handleItemsPerPageChange = (value) => {
+		setItemsPerPage(value)
+		setCurrentPage(1)
+	}
+
 	const handleViewDetails = (candidateId) => {
 		navigate(`/candidate-details/${candidateId}`)
 	}
 
 	return (
-		<Box sx={{ p: 3 }}>
+		<Box sx={{ p: 3, pb: "80px" }}>
 			<Typography variant="h5" sx={{ mb: 3 }}>
 				Lista de Candidatos
 			</Typography>
@@ -118,7 +134,7 @@ const CandidateList = () => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{sortedCandidates.map((candidate) => (
+						{paginatedCandidates.map((candidate) => (
 							<TableRow key={candidate.id}>
 								<TableCell>{candidate.name}</TableCell>
 								<TableCell>{candidate.email}</TableCell>
@@ -137,6 +153,13 @@ const CandidateList = () => {
 					</TableBody>
 				</Table>
 			</TableContainer>
+			<Pagination
+				totalItems={sortedCandidates.length}
+				itemsPerPage={itemsPerPage}
+				currentPage={currentPage}
+				onPageChange={handlePageChange}
+				onItemsPerPageChange={handleItemsPerPageChange}
+			/>
 		</Box>
 	)
 }
