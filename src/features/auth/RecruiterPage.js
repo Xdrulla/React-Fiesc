@@ -52,7 +52,7 @@ const RecruiterRegisterPage = () => {
 
       <Button
         variant="outlined"
-        onClick={() => navigate("/register")}
+        onClick={() => navigate("/")}
         className="back-button"
       >
         Voltar para a tela de cadastro

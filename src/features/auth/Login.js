@@ -89,7 +89,7 @@ const Login = () => {
         variant="text"
         fullWidth
         className="register-button"
-        onClick={() => navigate("/register")}
+        onClick={() => navigate("/")}
       >
         Não tem uma conta? Cadastre-se
       </Button>
