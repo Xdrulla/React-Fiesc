@@ -3,7 +3,7 @@ import { Box, Typography, Grid, Paper, Button } from "@mui/material"
 import { useParams, useNavigate } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../../service/firebase"
-import { calculateCandidateScore } from "../../common/utils/scoreMath" 
+import { calculateCandidateScore } from "../../common/utils/scoreMath"
 
 const CandidateDetails = () => {
   const { candidateId } = useParams()
@@ -48,29 +48,27 @@ const CandidateDetails = () => {
   }
 
   return (
-    <Box sx={{ p: 3, maxWidth: 800, mx: "auto" }}>
-      <Typography variant="h5" sx={{ mb: 3 }}>
-        Detalhes do Candidato
-      </Typography>
-      <Paper sx={{ p: 3, mb: 2 }}>
+    <Box className="candidate-details">
+      <Typography className="title">Detalhes do Candidato</Typography>
+      <Paper className="candidate-info">
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={12} className="info-section">
             <Typography variant="h6">Nome Completo</Typography>
             <Typography>{candidate.name}</Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className="info-section">
             <Typography variant="h6">E-mail</Typography>
             <Typography>{candidate.email}</Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className="info-section">
             <Typography variant="h6">Telefone</Typography>
             <Typography>{candidate.phone}</Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className="info-section">
             <Typography variant="h6">Habilidades</Typography>
             <Typography>{candidate.skills?.join(", ")}</Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className="info-section">
             <Typography variant="h6">Score</Typography>
             <Typography>{score || "Não disponível"}</Typography>
           </Grid>
@@ -79,6 +77,7 @@ const CandidateDetails = () => {
       <Button
         variant="outlined"
         color="primary"
+        className="back-button"
         onClick={() => navigate(`/candidates/${candidateId.split("_")[0]}`)}
       >
         Voltar

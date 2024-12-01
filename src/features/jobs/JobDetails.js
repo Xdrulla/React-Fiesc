@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { Box, Typography, CircularProgress, Chip } from "@mui/material"
-import { doc, getDoc } from "firebase/firestore"
-import { db } from "../../service/firebase"
+import { useParams, useNavigate } from "react-router-dom"
+import { Box, Typography, CircularProgress, Chip, Button } from "@mui/material"
+import { doc, getDoc, setDoc, collection } from "firebase/firestore"
+import { auth, db } from "../../service/firebase"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { showErrorAlert, showSuccessAlert } from "../../helper/alert"
 
 const JobDetails = () => {
   const { jobId } = useParams()
+  const navigate = useNavigate()
   const [job, setJob] = useState(null)
-  const [loading, setLoading] = useState(true)  
+  const [loading, setLoading] = useState(true)
+  const [user] = useAuthState(auth)
+  const [isApplied, setIsApplied] = useState(false)
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -15,6 +20,13 @@ const JobDetails = () => {
         const jobDoc = await getDoc(doc(db, "jobs", jobId))
         if (jobDoc.exists()) {
           setJob({ id: jobDoc.id, ...jobDoc.data() })
+
+          if (user) {
+            const applicationDoc = await getDoc(
+              doc(collection(db, "applications"), `${jobId}_${user.uid}`)
+            )
+            setIsApplied(applicationDoc.exists())
+          }
         }
       } catch (error) {
         console.error("Erro ao buscar detalhes da vaga:", error)
@@ -24,7 +36,28 @@ const JobDetails = () => {
     }
 
     fetchJobDetails()
-  }, [jobId])
+  }, [jobId, user])
+
+  const handleApply = async () => {
+    if (!user) {
+      showErrorAlert("Você precisa estar logado para se inscrever na vaga.")
+      navigate("/login")
+      return
+    }
+
+    try {
+      await setDoc(doc(collection(db, "applications"), `${jobId}_${user.uid}`), {
+        jobId,
+        userId: user.uid,
+        appliedAt: new Date(),
+      })
+      setIsApplied(true)
+      showSuccessAlert("Inscrição realizada com sucesso!")
+    } catch (error) {
+      console.error("Erro ao se inscrever na vaga:", error)
+      alert("Erro ao se inscrever. Tente novamente mais tarde.")
+    }
+  }
 
   if (loading) {
     return (
@@ -134,6 +167,41 @@ const JobDetails = () => {
           return daysLeft > 0 ? `${daysLeft} dias` : "Expirado"
         })()}
       </Typography>
+
+      {user ? (
+        isApplied ? (
+          <Typography
+            sx={{
+              mt: 3,
+              color: "green",
+              textAlign: "center",
+              fontWeight: "bold",
+            }}
+          >
+            Você já está inscrito nesta vaga.
+          </Typography>
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 3 }}
+            onClick={handleApply}
+          >
+            Inscrever-se
+          </Button>
+        )
+      ) : (
+        <Button
+          variant="contained"
+          color="secondary"
+          fullWidth
+          sx={{ mt: 3 }}
+          onClick={() => navigate("/login")}
+        >
+          Fazer Login para Inscrever-se
+        </Button>
+      )}
     </Box>
   )
 }

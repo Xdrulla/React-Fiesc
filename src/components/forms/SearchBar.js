@@ -8,7 +8,7 @@ const SearchBar = ({ searchQuery, setSearchQuery, placeholder = "Buscar..." }) =
 	}
 
 	return (
-		<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+		<Box className="search-bar">
 			<TextField
 				value={searchQuery}
 				onChange={(e) => setSearchQuery(e.target.value)}
@@ -16,14 +16,14 @@ const SearchBar = ({ searchQuery, setSearchQuery, placeholder = "Buscar..." }) =
 				fullWidth
 				variant="outlined"
 				size="small"
-				sx={{ flex: 1 }}
+				className="text-field"
 			/>
 			{searchQuery ? (
-				<IconButton onClick={handleClear} color="secondary">
+				<IconButton onClick={handleClear} color="secondary" className="icon-button">
 					<Clear />
 				</IconButton>
 			) : (
-				<IconButton disabled>
+				<IconButton disabled className="icon-button">
 					<Search />
 				</IconButton>
 			)}

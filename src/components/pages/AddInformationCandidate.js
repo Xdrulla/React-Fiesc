@@ -43,7 +43,6 @@ const AddInformationCandidate = () => {
 		fetchSettings()
 
 		showProfileCompletionAlert(
-			() => console.log("Usuário escolheu completar agora."),
 			() => navigate("/dashboard")
 		)
 	}, [navigate])
@@ -57,14 +56,11 @@ const AddInformationCandidate = () => {
 
 	const onSubmit = async (data) => {
 		try {
-			console.log("Dados enviados:", data);
 			const userId = user?.uid
 			if (!userId) {
 				console.error("Usuário não autenticado.")
 				return
 			}
-
-			console.log("ID do usuário:", userId)
 
 			const updateData = {
 				workExperience: data.workExperience,
@@ -77,10 +73,7 @@ const AddInformationCandidate = () => {
 				phone: data.phone,
 			}
 
-			console.log("Dados para atualizar:", updateData)
-
 			await updateDoc(doc(db, "users", userId), updateData)
-			console.log("Informações adicionais adicionadas com sucesso!")
 			navigate("/dashboard")
 		} catch (error) {
 			console.error("Erro ao atualizar informações do candidato: ", error)
@@ -88,53 +81,36 @@ const AddInformationCandidate = () => {
 	}
 
 	return (
-		<Box
-			sx={{
-				maxWidth: 600,
-				mx: "auto",
-				mt: 5,
-				p: 3,
-				boxShadow: 3,
-				borderRadius: 2,
-				backgroundColor: "#fff",
-			}}
-		>
-			<Typography variant="h5" sx={{ mb: 3, textAlign: "center" }}>
+		<Box className="add-information-candidate">
+			<Typography variant="h5" className="form-title">
 				Completar Perfil - Candidato
 			</Typography>
-			<form
-				onSubmit={(e) => {
-					console.log("Formulário enviado")
-					handleSubmit(onSubmit)(e)
-				}}
-			>
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<Controller
 					name="workExperience"
 					control={control}
 					render={({ field, fieldState }) => (
-						<TextField
-							{...field}
-							label="Experiência Profissional"
-							fullWidth
-							margin="normal"
-							multiline
-							rows={4}
-							error={!!fieldState.error}
-							helperText={fieldState.error?.message}
-						/>
+						<Box className="field-wrapper">
+							<TextField
+								{...field}
+								label="Experiência Profissional"
+								multiline
+								rows={4}
+								error={!!fieldState.error}
+								helperText={fieldState.error?.message}
+							/>
+						</Box>
 					)}
 				/>
 				<Controller
 					name="skills"
 					control={control}
 					render={({ field }) => (
-						<Box>
+						<Box className="field-wrapper">
 							<TextField
 								select
 								{...field}
 								label="Habilidades"
-								fullWidth
-								margin="normal"
 								SelectProps={{
 									multiple: true,
 									value: field.value || [],
@@ -147,17 +123,16 @@ const AddInformationCandidate = () => {
 									</MenuItem>
 								))}
 							</TextField>
-							<Box sx={{ display: "flex", alignItems: "center", marginTop: 2 }}>
+							<Box className="skills-wrapper">
 								<TextField
 									label="Adicionar Nova Habilidade"
 									value={newSkill}
 									onChange={(e) => setNewSkill(e.target.value)}
-									fullWidth
-									margin="normal"
+									className="add-skill-input"
 								/>
 								<Button
 									variant="contained"
-									sx={{ marginLeft: 2, height: "56px" }}
+									className="add-skill-button"
 									onClick={handleNewSkill}
 								>
 									Adicionar
@@ -170,70 +145,70 @@ const AddInformationCandidate = () => {
 					name="experienceLevel"
 					control={control}
 					render={({ field, fieldState }) => (
-						<TextField
-							select
-							{...field}
-							label="Tempo de Experiência"
-							fullWidth
-							margin="normal"
-							error={!!fieldState.error}
-							helperText={fieldState.error?.message}
-						>
-							{experienceLevels.map((level) => (
-								<MenuItem key={level} value={level}>
-									{level}
-								</MenuItem>
-							))}
-						</TextField>
+						<Box className="field-wrapper">
+							<TextField
+								select
+								{...field}
+								label="Tempo de Experiência"
+								error={!!fieldState.error}
+								helperText={fieldState.error?.message}
+							>
+								{experienceLevels.map((level) => (
+									<MenuItem key={level} value={level}>
+										{level}
+									</MenuItem>
+								))}
+							</TextField>
+						</Box>
 					)}
 				/>
 				<Controller
 					name="minSalary"
 					control={control}
 					render={({ field, fieldState }) => (
-						<TextField
-							{...field}
-							label="Salário Mínimo"
-							type="number"
-							fullWidth
-							margin="normal"
-							error={!!fieldState.error}
-							helperText={fieldState.error?.message}
-						/>
+						<Box className="field-wrapper">
+							<TextField
+								{...field}
+								label="Salário Mínimo"
+								type="number"
+								error={!!fieldState.error}
+								helperText={fieldState.error?.message}
+							/>
+						</Box>
 					)}
 				/>
 				<Controller
 					name="maxSalary"
 					control={control}
 					render={({ field, fieldState }) => (
-						<TextField
-							{...field}
-							label="Salário Máximo"
-							type="number"
-							fullWidth
-							margin="normal"
-							error={!!fieldState.error}
-							helperText={fieldState.error?.message}
-						/>
+						<Box className="field-wrapper">
+							<TextField
+								{...field}
+								label="Salário Máximo"
+								type="number"
+								error={!!fieldState.error}
+								helperText={fieldState.error?.message}
+							/>
+						</Box>
 					)}
 				/>
 				<Controller
 					name="phone"
 					control={control}
 					render={({ field, fieldState }) => (
-						<TextField
-							{...field}
-							fullWidth
-							margin="normal"
-							InputProps={{
-								inputComponent: TextMaskCustom,
-							}}
-							error={!!fieldState.error}
-							helperText={fieldState.error?.message}
-						/>
+						<Box className="field-wrapper">
+							<TextField
+								{...field}
+								InputProps={{
+									inputComponent: TextMaskCustom,
+								}}
+								error={!!fieldState.error}
+								helperText={fieldState.error?.message}
+							/>
+						</Box>
 					)}
 				/>
-				<Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+				<Button type="submit" variant="contained" className="submit-button">
 					Salvar
 				</Button>
 			</form>

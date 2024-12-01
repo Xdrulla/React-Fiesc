@@ -105,16 +105,13 @@ const CandidateList = () => {
 	}
 
 	return (
-		<Box sx={{ p: 3, pb: "80px" }}>
-			<Typography variant="h5" sx={{ mb: 3 }}>
-				Lista de Candidatos
-			</Typography>
-			<Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+		<Box className="candidate-list">
+			<Typography>Lista de Candidatos</Typography>
+			<Box className="controls">
 				<Select
 					value={sortField}
 					onChange={(e) => handleSortChange(e.target.value)}
 					displayEmpty
-					sx={{ width: 200, mr: 2 }}
 				>
 					<MenuItem value="name">Nome</MenuItem>
 					<MenuItem value="score">Score</MenuItem>
@@ -123,7 +120,7 @@ const CandidateList = () => {
 					{sortOrder === "asc" ? <ArrowUpward /> : <ArrowDownward />}
 				</IconButton>
 			</Box>
-			<TableContainer component={Paper}>
+			<TableContainer component={Paper} className="table-container">
 				<Table>
 					<TableHead>
 						<TableRow>
@@ -142,7 +139,6 @@ const CandidateList = () => {
 								<TableCell>
 									<Button
 										variant="text"
-										color="primary"
 										onClick={() => handleViewDetails(candidate.id)}
 									>
 										Ver detalhes

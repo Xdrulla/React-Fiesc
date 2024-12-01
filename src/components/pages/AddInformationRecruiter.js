@@ -25,7 +25,6 @@ const AddInformationRecruiter = () => {
 
   useEffect(() => {
     showProfileCompletionAlert(
-      () => console.log("Usuário escolheu completar agora."),
       () => navigate("/dashboard")
     )
   }, [navigate])
@@ -37,18 +36,13 @@ const AddInformationRecruiter = () => {
         return
       }
 
-      console.log("Dados enviados:", data)
-
       const updateData = {
         phone: data.phone,
         position: data.position,
         company: data.company,
       }
 
-      console.log("Dados para atualizar:", updateData)
-
       await updateDoc(doc(db, "users", user.uid), updateData)
-      console.log("Informações adicionais do recrutador salvas com sucesso!")
       navigate("/dashboard")
     } catch (error) {
       console.error("Erro ao atualizar informações do recrutador:", error)
@@ -56,33 +50,17 @@ const AddInformationRecruiter = () => {
   }
 
   return (
-    <Box
-      sx={{
-        maxWidth: 600,
-        mx: "auto",
-        mt: 5,
-        p: 3,
-        boxShadow: 3,
-        borderRadius: 2,
-        backgroundColor: "#fff",
-      }}
-    >
-      <Typography variant="h5" sx={{ mb: 3, textAlign: "center" }}>
+    <Box className="add-information-recruiter">
+      <Typography variant="h5" className="form-title">
         Completar Perfil - Recrutador
       </Typography>
-      <form
-        onSubmit={(e) => {
-          console.log("Formulário enviado")
-          handleSubmit(onSubmit)(e)
-        }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="phone"
           control={control}
           render={({ field, fieldState }) => (
             <TextField
               {...field}
-              label="Telefone"
               fullWidth
               margin="normal"
               InputProps={{
@@ -121,7 +99,7 @@ const AddInformationRecruiter = () => {
             />
           )}
         />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+        <Button type="submit" variant="contained" fullWidth>
           Salvar
         </Button>
       </form>

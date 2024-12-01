@@ -21,50 +21,39 @@ const RecruiterRegisterPage = () => {
     },
   })
 
-	const onSubmit = async (data) => {
-		try {
-			const userCredential = await createUserWithEmailAndPassword(
-				auth,
-				data.email,
-				data.password
-			)
-			const uid = userCredential.user.uid;
-	
-			await setDoc(doc(db, "users", uid), {
-				name: data.name,
-				email: data.email,
-				role: "recruiter",
+  const onSubmit = async (data) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      )
+      const uid = userCredential.user.uid
+
+      await setDoc(doc(db, "users", uid), {
+        name: data.name,
+        email: data.email,
+        role: "recruiter",
         createdAt: new Date(),
-			})
-	
-			console.log("Recrutador cadastrado com sucesso!")
-			reset();
-			navigate("/login")
-		} catch (error) {
-			console.error("Erro ao cadastrar recrutador: ", error)
-		}
-	}	
+      })
+
+      reset()
+      navigate("/login")
+    } catch (error) {
+      console.error("Erro ao cadastrar recrutador: ", error)
+    }
+  }
 
   return (
-    <Box
-      sx={{
-        maxWidth: 400,
-        mx: "auto",
-        mt: 5,
-        p: 3,
-        boxShadow: 3,
-        borderRadius: 2,
-        backgroundColor: "#fff",
-      }}
-    >
-      <Typography variant="h5" sx={{ mb: 3, textAlign: "center" }}>
+    <Box className="recruiter-register-page">
+      <Typography variant="h5" className="title">
         Cadastro de Recrutador
       </Typography>
 
       <Button
         variant="outlined"
         onClick={() => navigate("/register")}
-        sx={{ mb: 2 }}
+        className="back-button"
       >
         Voltar para a tela de cadastro
       </Button>
@@ -128,7 +117,7 @@ const RecruiterRegisterPage = () => {
             />
           )}
         />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+        <Button type="submit" variant="contained">
           Cadastrar
         </Button>
       </form>

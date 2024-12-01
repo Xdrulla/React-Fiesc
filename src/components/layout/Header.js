@@ -54,13 +54,13 @@ const Header = () => {
   }
 
   return (
-    <AppBar position="static" color="primary">
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6" component="div">
+    <AppBar position="static" className="header">
+      <Toolbar className="toolbar">
+        <Typography variant="h6" component="div" className="logo">
           Sistema de Recrutamento
         </Typography>
         {user ? (
-          <div>
+          <div className="user-section">
             <IconButton
               edge="end"
               color="inherit"
@@ -69,7 +69,7 @@ const Header = () => {
               aria-haspopup="true"
             >
               <AccountCircle />
-              <Typography variant="body1" sx={{ ml: 1 }}>
+              <Typography variant="body1" className="user-name">
                 {userName}
               </Typography>
             </IconButton>
@@ -78,19 +78,28 @@ const Header = () => {
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
+              className="menu"
             >
-              <MenuItem onClick={() => navigate("/profile")}>Meu Perfil</MenuItem>
+              <MenuItem onClick={() => navigate("/profile")} className="menu-item">
+                Meu Perfil
+              </MenuItem>
               {userRole === "recruiter" ? (
-                <MenuItem onClick={() => navigate("/dashboard")}>Minhas Vagas</MenuItem>
+                <MenuItem onClick={() => navigate("/dashboard")} className="menu-item">
+                  Minhas Vagas
+                </MenuItem>
               ) : (
-                <MenuItem onClick={() => navigate("/my-applications")}>
+                <MenuItem onClick={() => navigate("/my-applications")} className="menu-item">
                   Minhas Inscrições
                 </MenuItem>
               )}
               {userRole === "candidate" && (
-                <MenuItem onClick={() => navigate("/dashboard")}>Vagas</MenuItem>
+                <MenuItem onClick={() => navigate("/dashboard")} className="menu-item">
+                  Vagas
+                </MenuItem>
               )}
-              <MenuItem onClick={handleLogout}>Sair</MenuItem>
+              <MenuItem onClick={handleLogout} className="menu-item">
+                Sair
+              </MenuItem>
             </Menu>
           </div>
         ) : (
@@ -99,6 +108,7 @@ const Header = () => {
             component={Link}
             to="/login"
             variant="outlined"
+            className="login-button"
           >
             Login
           </Button>

@@ -24,26 +24,13 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange, onIte
   }
 
   return (
-    <Box
-      sx={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: "white",
-        borderTop: "1px solid #ccc",
-        zIndex: 10,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "8px 16px",
-      }}
-    >
-      <FormControl size="small" sx={{ minWidth: 120 }}>
+    <Box className="pagination">
+      <FormControl className="pagination-form-control" size="small">
         <InputLabel>Itens por Página</InputLabel>
         <Select
           value={itemsPerPage}
           onChange={(e) => onItemsPerPageChange(parseInt(e.target.value, 10))}
+          className="pagination-select"
         >
           <MenuItem value={5}>5</MenuItem>
           <MenuItem value={20}>20</MenuItem>
@@ -51,16 +38,17 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange, onIte
         </Select>
       </FormControl>
 
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+      <Box className="pagination-actions">
         <Button
           variant="outlined"
           size="small"
           onClick={handlePrev}
           disabled={currentPage === 1}
+          className="pagination-button"
         >
           Voltar
         </Button>
-        <Typography>
+        <Typography className="pagination-text">
           Página {currentPage} de {totalPages}
         </Typography>
         <Button
@@ -68,14 +56,19 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange, onIte
           size="small"
           onClick={handleNext}
           disabled={currentPage === totalPages}
+          className="pagination-button"
         >
           Avançar
         </Button>
       </Box>
 
-      <FormControl size="small" sx={{ minWidth: 120 }}>
+      <FormControl className="pagination-form-control" size="small">
         <InputLabel>Ir para Página</InputLabel>
-        <Select value={currentPage} onChange={handleGoToPage}>
+        <Select
+          value={currentPage}
+          onChange={handleGoToPage}
+          className="pagination-select"
+        >
           {Array.from({ length: totalPages }, (_, index) => (
             <MenuItem key={index + 1} value={index + 1}>
               {index + 1}

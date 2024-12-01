@@ -1,12 +1,5 @@
 import React from "react"
-import {
-	Box,
-	Button,
-	TextField,
-	Typography,
-	IconButton,
-	Modal,
-} from "@mui/material"
+import { Box, Button, TextField, Typography, IconButton, Modal } from "@mui/material"
 import { ContentCopy } from "@mui/icons-material"
 import Swal from "sweetalert2"
 import { useNavigate } from "react-router-dom"
@@ -35,40 +28,23 @@ const ShareModal = ({ open, onClose, link }) => {
 
 	return (
 		<Modal open={open} onClose={handleClose}>
-			<Box
-				sx={{
-					position: "absolute",
-					top: "50%",
-					left: "50%",
-					transform: "translate(-50%, -50%)",
-					width: 400,
-					bgcolor: "background.paper",
-					boxShadow: 24,
-					p: 4,
-					borderRadius: 2,
-				}}
-			>
-				<Typography variant="h6" sx={{ mb: 2 }}>
+			<Box className="share-modal">
+				<Typography variant="h6" className="modal-title">
 					Compartilhar Link da Vaga
 				</Typography>
-				<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+				<Box className="modal-content">
 					<TextField
 						value={link}
-						fullWidth
+						className="read-only-text"
 						InputProps={{
 							readOnly: true,
 						}}
 					/>
-					<IconButton onClick={handleCopyAndClose} color="primary">
+					<IconButton onClick={handleCopyAndClose} className="copy-button">
 						<ContentCopy />
 					</IconButton>
 				</Box>
-				<Button
-					fullWidth
-					variant="contained"
-					sx={{ mt: 2 }}
-					onClick={handleClose}
-				>
+				<Button fullWidth variant="contained" className="close-button" onClick={handleClose}>
 					Fechar
 				</Button>
 			</Box>

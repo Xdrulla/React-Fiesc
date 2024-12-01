@@ -42,11 +42,11 @@ const MyApplications = () => {
 	}, [user])
 
 	return (
-		<Box sx={{ p: 3 }}>
-			<Typography variant="h5" sx={{ mb: 3 }}>
+		<Box className="my-applications">
+			<Typography variant="h5" className="title">
 				Minhas Inscrições
 			</Typography>
-			<TableContainer component={Paper}>
+			<TableContainer component={Paper} className="table-container">
 				<Table>
 					<TableHead>
 						<TableRow>

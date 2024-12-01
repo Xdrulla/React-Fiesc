@@ -37,7 +37,6 @@ const CandidateRegisterPage = () => {
         createdAt: new Date(),
       })
 
-      console.log("Candidato cadastrado com sucesso!")
       reset()
       navigate("/login")
     } catch (error) {
@@ -46,25 +45,15 @@ const CandidateRegisterPage = () => {
   }
 
   return (
-    <Box
-      sx={{
-        maxWidth: 400,
-        mx: "auto",
-        mt: 5,
-        p: 3,
-        boxShadow: 3,
-        borderRadius: 2,
-        backgroundColor: "#fff",
-      }}
-    >
-      <Typography variant="h5" sx={{ mb: 3, textAlign: "center" }}>
+    <Box className="candidate-register-page">
+      <Typography variant="h5" className="title">
         Cadastro de Candidato
       </Typography>
 
       <Button
         variant="outlined"
         onClick={() => navigate("/register")}
-        sx={{ mb: 2 }}
+        className="back-button"
       >
         Voltar para a tela de cadastro
       </Button>
@@ -128,7 +117,7 @@ const CandidateRegisterPage = () => {
             />
           )}
         />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+        <Button type="submit" variant="contained">
           Cadastrar
         </Button>
       </form>

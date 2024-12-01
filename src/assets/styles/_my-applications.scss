@@ -1,0 +1,58 @@
+.my-applications {
+    padding: 24px;
+  
+    .title {
+      margin-bottom: 24px;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+  
+    .table-container {
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+  
+      .MuiTableHead-root {
+        background-color: var(--mui-primary-main, #1976d2);
+  
+        .MuiTableCell-root {
+          color: #fff;
+          font-weight: bold;
+          text-align: left;
+          font-size: 1rem;
+        }
+      }
+  
+      .MuiTableBody-root {
+        .MuiTableRow-root {
+          &:nth-child(even) {
+            background-color: #f9f9f9;
+          }
+  
+          &:hover {
+            background-color: #e0f7fa;
+          }
+        }
+  
+        .MuiTableCell-root {
+          font-size: 0.9rem;
+          text-align: left;
+          color: #333;
+        }
+      }
+    }
+  
+    @media (max-width: 768px) {
+      padding: 16px;
+  
+      .title {
+        font-size: 1.25rem;
+      }
+  
+      .MuiTableCell-root {
+        font-size: 0.85rem;
+      }
+    }
+  }
+  

@@ -25,40 +25,30 @@ const Login = () => {
         auth,
         data.email,
         data.password
-      );
-      const uid = userCredential.user.uid;
-  
-      const isProfileComplete = await checkProfileCompletion(uid);
-  
+      )
+      const uid = userCredential.user.uid
+
+      const isProfileComplete = await checkProfileCompletion(uid)
+
       if (!isProfileComplete) {
-        console.log("Cadastro incompleto. Redirecionando para completar perfil...");
-        const userDoc = await getDoc(doc(db, "users", uid));
-        const userData = userDoc.data();
-  
-        navigate(userData.role === "recruiter" ? "/add-info/recruiter" : "/add-info/candidate");
+        const userDoc = await getDoc(doc(db, "users", uid))
+        const userData = userDoc.data()
+
+        navigate(
+          userData.role === "recruiter" ? "/add-info/recruiter" : "/add-info/candidate"
+        )
       } else {
-        navigate("/dashboard");
+        navigate("/dashboard")
       }
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      alert("Falha ao autenticar. Verifique suas credenciais.");
+      console.error("Erro ao fazer login:", error)
+      alert("Falha ao autenticar. Verifique suas credenciais.")
     }
-  };
-  
+  }
 
   return (
-    <Box
-      sx={{
-        maxWidth: 400,
-        mx: "auto",
-        mt: 5,
-        p: 3,
-        boxShadow: 3,
-        borderRadius: 2,
-        backgroundColor: "#fff",
-      }}
-    >
-      <Typography variant="h5" sx={{ mb: 3, textAlign: "center" }}>
+    <Box className="login-container">
+      <Typography variant="h5" >
         Login
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -91,14 +81,14 @@ const Login = () => {
             />
           )}
         />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+        <Button type="submit" variant="contained">
           Entrar
         </Button>
       </form>
       <Button
         variant="text"
         fullWidth
-        sx={{ mt: 1 }}
+        className="register-button"
         onClick={() => navigate("/register")}
       >
         Não tem uma conta? Cadastre-se
