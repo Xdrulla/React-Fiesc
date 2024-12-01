@@ -3,7 +3,7 @@ import { Box, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import Logo from "../../assets/logo.webp"
+import Logo from "../../assets/images/logo.webp"
 
 const RegisterPage = () => {
 	return (

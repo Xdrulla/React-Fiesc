@@ -2,17 +2,17 @@ import React from "react"
 import { useForm, Controller } from "react-hook-form"
 import { TextField, Button, Box, Typography } from "@mui/material"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { candidateSchema } from "../../helper/validations"
+import { recruiterSchema } from "../../common/utils/validations"
 import { useNavigate } from "react-router-dom"
 import { db, auth } from "../../service/firebase"
 import { doc, setDoc } from "firebase/firestore"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 
-const CandidateRegisterPage = () => {
+const RecruiterRegisterPage = () => {
   const navigate = useNavigate()
 
   const { control, handleSubmit, reset } = useForm({
-    resolver: yupResolver(candidateSchema),
+    resolver: yupResolver(recruiterSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -21,29 +21,29 @@ const CandidateRegisterPage = () => {
     },
   })
 
-  const onSubmit = async (data) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      )
-      const uid = userCredential.user.uid
-
-      await setDoc(doc(db, "users", uid), {
-        name: data.name,
-        email: data.email,
-        role: "candidate",
+	const onSubmit = async (data) => {
+		try {
+			const userCredential = await createUserWithEmailAndPassword(
+				auth,
+				data.email,
+				data.password
+			)
+			const uid = userCredential.user.uid;
+	
+			await setDoc(doc(db, "users", uid), {
+				name: data.name,
+				email: data.email,
+				role: "recruiter",
         createdAt: new Date(),
-      })
-
-      console.log("Candidato cadastrado com sucesso!")
-      reset()
-      navigate("/login")
-    } catch (error) {
-      console.error("Erro ao cadastrar candidato: ", error)
-    }
-  }
+			})
+	
+			console.log("Recrutador cadastrado com sucesso!")
+			reset();
+			navigate("/login")
+		} catch (error) {
+			console.error("Erro ao cadastrar recrutador: ", error)
+		}
+	}	
 
   return (
     <Box
@@ -58,7 +58,7 @@ const CandidateRegisterPage = () => {
       }}
     >
       <Typography variant="h5" sx={{ mb: 3, textAlign: "center" }}>
-        Cadastro de Candidato
+        Cadastro de Recrutador
       </Typography>
 
       <Button
@@ -136,4 +136,4 @@ const CandidateRegisterPage = () => {
   )
 }
 
-export default CandidateRegisterPage
+export default RecruiterRegisterPage

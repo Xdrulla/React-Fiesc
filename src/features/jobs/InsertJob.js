@@ -14,8 +14,8 @@ import { useForm, Controller } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { auth, db } from "../../service/firebase"
 import { collection, doc, setDoc, getDoc } from "firebase/firestore"
-import { jobSchema } from "../../helper/validations"
-import ShareModal from "./Modal"
+import { jobSchema } from "../../common/utils/validations"
+import ShareModal from "../../components/modals/Modal"
 import { useNavigate, useLocation } from "react-router-dom"
 
 type Props = {

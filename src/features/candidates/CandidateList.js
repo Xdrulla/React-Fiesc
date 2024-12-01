@@ -19,8 +19,8 @@ import { collection, query, where, getDocs, doc, getDoc } from "firebase/firesto
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useNavigate, useParams } from "react-router-dom"
 import { db, auth } from "../../service/firebase"
-import { calculateCandidateScore } from "../../helper/scoreMath"
-import Pagination from "../navigation/Pagination"
+import { calculateCandidateScore } from "../../common/utils/scoreMath"
+import Pagination from "../../components/layout/Pagination"
 
 const CandidateList = () => {
 	const [candidates, setCandidates] = useState([])

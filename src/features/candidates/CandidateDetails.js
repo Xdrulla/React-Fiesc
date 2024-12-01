@@ -3,7 +3,7 @@ import { Box, Typography, Grid, Paper, Button } from "@mui/material"
 import { useParams, useNavigate } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../../service/firebase"
-import { calculateCandidateScore } from "../../helper/scoreMath" 
+import { calculateCandidateScore } from "../../common/utils/scoreMath" 
 
 const CandidateDetails = () => {
   const { candidateId } = useParams()

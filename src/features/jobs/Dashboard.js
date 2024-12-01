@@ -19,13 +19,13 @@ import {
 import { Edit, Delete, Share, Visibility, ArrowUpward, ArrowDownward } from "@mui/icons-material"
 import { db, auth } from "../../service/firebase"
 import { collection, getDocs, deleteDoc, doc, setDoc, getDoc, query, where } from "firebase/firestore"
-import Pagination from "../navigation/Pagination"
+import Pagination from "../../components/layout/Pagination"
 import InsertJob from "./InsertJob"
 import { showSuccessAlert, showErrorAlert, showWarningAlert, showConfirmationAlert } from "../../helper/alert"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useLocation, useNavigate } from "react-router-dom"
-import ShareModal from "./Modal"
-import SearchBar from "../navigation/SearchBar"
+import ShareModal from "../../components/modals/Modal"
+import SearchBar from "../../components/forms/SearchBar"
 
 const Dashboard = () => {
 	const [jobs, setJobs] = useState([])

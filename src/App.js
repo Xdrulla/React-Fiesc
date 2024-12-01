@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import AppRoutes from './routes/AppRoutes';
-import Header from './components/navigation/Header';
+import Header from './components/layout/Header';
 
 const App = () => {
   return (

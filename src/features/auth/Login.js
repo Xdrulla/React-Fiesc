@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { useNavigate } from "react-router-dom"
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { auth, db } from "../../service/firebase"
-import { loginSchema } from "../../helper/validations"
+import { loginSchema } from "../../common/utils/validations"
 import { doc, getDoc } from "firebase/firestore"
 import { checkProfileCompletion } from "../../helper/login"
 
