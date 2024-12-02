@@ -6,3 +6,19 @@ Leia com atenção toda a documentação com os requisitos da prova que foi envi
 Lembrando que a configuração da prova fica a cargo do candidato, a realizar de acordo com os requisitos repassados ao candidato.  
   
 Registrar nesse arquivo o que foi realizado da prova, as tecnologias utilizadas, o que não foi possível fazer e alguma observação que achar importante.  
+
+
+// Desenvolvedor Luan Drulla
+
+Acredito ter implementado todas as funcionalidades descritas na documentação. Utilizei as seguintes tecnologias:
+
+- **Frontend**:
+  - **React** e **Material-UI** para a construção da interface de usuário.
+  - **Yup** para validações de campos.
+  - **React Hook Form** para gerenciamento de formulários.
+  - **SCSS** para estilização.
+  - **SweetAlert2** para exibição de avisos, alertas e interações com o usuário.
+  - **React Mask Text** para aplicação de máscaras em campos de telefone.
+
+- **Backend**:
+  Optei pelo uso do **Firebase** para simulação de dados e desenvolvimento do backend. A escolha se deu por sua estrutura robusta, que oferece autenticação e um banco de dados não relacional, permitindo focar no desenvolvimento das funcionalidades do frontend.
