@@ -23,7 +23,3 @@ Acredito ter implementado todas as funcionalidades descritas na documentação. 
 - **Backend**:
   Optei pelo uso do **Firebase** para simulação de dados e desenvolvimento do backend. A escolha se deu por sua estrutura robusta, que oferece autenticação e um banco de dados não relacional, permitindo focar no desenvolvimento das funcionalidades do frontend.
 
-  Acredito que seja necessário a conta de acesso ao firebase para analisar a construção:
-
-  e-mail: serighelli003@gmail.com
-  senha: LuanDrulla@17
