@@ -1,0 +1,17 @@
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  
+    .text-field {
+      flex: 1;
+    }
+  
+    .icon-button {
+      color: var(--mui-secondary-main);
+      &:disabled {
+        color: var(--mui-gray);
+      }
+    }
+  }
+  

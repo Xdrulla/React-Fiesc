@@ -1,0 +1,86 @@
+.job-details {
+    padding: 32px;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--mui-background-paper);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  
+    .loading-container,
+    .error-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+  
+      .loading-spinner {
+        color: var(--mui-primary-main);
+      }
+  
+      .error-message {
+        color: var(--mui-error-main);
+        font-size: 1.2rem;
+      }
+    }
+  
+    .job-title {
+      margin-bottom: 16px;
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--mui-primary-main);
+    }
+  
+    .job-location,
+    .job-description {
+      margin-bottom: 16px;
+      font-size: 1rem;
+      color: var(--mui-text-primary);
+    }
+  
+    .job-section {
+      margin-top: 24px;
+      margin-bottom: 16px;
+  
+      h6 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: var(--mui-primary-main);
+      }
+  
+      p {
+        font-size: 1rem;
+        color: var(--mui-text-secondary);
+      }
+  
+      .skills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+  
+        .chip-primary {
+          background-color: var(--mui-primary-main);
+          color: white;
+        }
+  
+        .chip-secondary {
+          background-color: var(--mui-secondary-main);
+          color: white;
+        }
+      }
+    }
+  
+    .job-experience {
+      font-size: 1rem;
+      margin-top: 16px;
+      color: var(--mui-text-secondary);
+    }
+  
+    .job-days-remaining {
+      font-size: 1rem;
+      color: var(--mui-text-secondary);
+      margin-top: 24px;
+      text-align: center;
+    }
+  }
+  

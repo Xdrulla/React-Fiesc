@@ -1,0 +1,72 @@
+.candidate-details {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+  
+    .title {
+      margin-bottom: 24px;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+      text-align: center;
+    }
+  
+    .candidate-info {
+      padding: 24px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 16px;
+  
+      .info-section {
+        margin-bottom: 16px;
+  
+        h6 {
+          font-size: 1rem;
+          font-weight: 600;
+          margin-bottom: 4px;
+          color: #555;
+        }
+  
+        p {
+          font-size: 0.9rem;
+          color: #666;
+        }
+      }
+    }
+  
+    .back-button {
+      margin-top: 16px;
+      display: block;
+      text-align: center;
+      padding: 8px 16px;
+      background-color: var(--mui-primary-main, #1976d2);
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-radius: 4px;
+      text-decoration: none;
+  
+      &:hover {
+        background-color: #125ea5;
+        color: #fff;
+      }
+    }
+  
+    @media (max-width: 768px) {
+      padding: 16px;
+  
+      .candidate-info {
+        padding: 16px;
+      }
+  
+      .title {
+        font-size: 1.25rem;
+      }
+  
+      .back-button {
+        font-size: 0.875rem;
+      }
+    }
+  }
+  

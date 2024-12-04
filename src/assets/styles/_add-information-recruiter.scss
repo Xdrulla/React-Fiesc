@@ -1,0 +1,55 @@
+.add-information-recruiter {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: var(--form-background, #fff);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  
+    .form-title {
+      margin-bottom: 24px;
+      font-size: 1.5rem;
+      font-weight: 500;
+      text-align: center;
+      color: #333;
+    }
+  
+    form {
+      display: flex;
+      flex-direction: column;
+  
+      .field-wrapper {
+        margin-bottom: 16px;
+  
+        .MuiTextField-root {
+          width: 100%;
+        }
+  
+        .Mui-error {
+          color: #d32f2f;
+        }
+      }
+  
+      .MuiButton-root {
+        margin-top: 24px;
+        background-color: var(--mui-primary-main, #1976d2);
+        color: #fff;
+        text-transform: uppercase;
+        font-weight: bold;
+  
+        &:hover {
+          background-color: #155fa0;
+          color: #fff;
+        }
+      }
+    }
+  
+    @media (max-width: 768px) {
+      padding: 16px;
+  
+      .MuiButton-root {
+        width: 100%;
+      }
+    }
+  }
+  
